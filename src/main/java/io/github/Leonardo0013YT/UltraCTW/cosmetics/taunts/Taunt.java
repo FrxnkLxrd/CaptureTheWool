@@ -9,6 +9,7 @@ import io.github.Leonardo0013YT.UltraCTW.team.Team;
 import io.github.Leonardo0013YT.UltraCTW.utils.ItemBuilder;
 import io.github.Leonardo0013YT.UltraCTW.utils.Utils;
 import io.github.Leonardo0013YT.UltraCTW.xseries.XMaterial;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -137,7 +138,7 @@ public class Taunt implements Purchasable {
             String death = d.getName();
             msg = msg.replaceAll("<killer>", ck + killer).replaceAll("<death>", cd + death);
             for (Player p : game.getCached()) {
-                p.sendMessage(msg + killer);
+                p.sendMessage(PlaceholderAPI.setPlaceholders(k, msg + killer));
             }
         }
     }

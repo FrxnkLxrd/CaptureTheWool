@@ -1,8 +1,10 @@
 package io.github.Leonardo0013YT.UltraCTW.utils;
 
 import io.github.Leonardo0013YT.UltraCTW.xseries.XMaterial;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,7 +31,7 @@ public class ItemUtils {
 
     public ItemUtils setDisplayName(String displayName) {
         ItemMeta im = item.getItemMeta();
-        im.setDisplayName(displayName);
+        im.setDisplayName(Utils.getColor(displayName));
         item.setItemMeta(im);
         return this;
     }
@@ -43,6 +45,13 @@ public class ItemUtils {
 
     public ItemUtils setLore(List<String> lore) {
         ItemMeta im = item.getItemMeta();
+        im.setLore(lore);
+        item.setItemMeta(im);
+        return this;
+    }
+    public ItemUtils setLoreWithPAPI(Player player, List<String> lore) {
+        ItemMeta im = item.getItemMeta();
+        lore.replaceAll(var1 -> Utils.getColor(PlaceholderAPI.setPlaceholders(player, var1)));
         im.setLore(lore);
         item.setItemMeta(im);
         return this;

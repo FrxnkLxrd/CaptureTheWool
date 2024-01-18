@@ -12,6 +12,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 public class CTWCMD implements CommandExecutor {
 
@@ -177,7 +180,14 @@ public class CTWCMD implements CommandExecutor {
                     if (plugin.getCm().isBungeeModeEnabled()){
                         return true;
                     }
-                    Game game = plugin.getGm().getSelectedGame();
+                    Collection<Game> gameList = plugin.getGm().getGames().values();
+                    HashMap<Integer, Game> games = new HashMap<>();
+                    for (Game game : gameList) {
+                        games.put(game.getPlayers().size(), game);
+                    }
+                    List<Map.Entry<Integer, Game>> listGames = new ArrayList<>(games.entrySet());
+                    listGames.sort(Map.Entry.comparingByKey(Comparator.reverseOrder()));
+                    Game game = listGames.get(0).getValue();
                     if (game == null){
                         p.sendMessage("messages.noArenas");
                         return true;
@@ -229,8 +239,8 @@ public class CTWCMD implements CommandExecutor {
                         p.sendMessage(plugin.getLang().get("messages.alreadyIngame"));
                         return true;
                     }
-                    Game gs = plugin.getGm().getSelectedGame();
-                    plugin.getGem().createJoinMenu(p, gs);
+                    //Game gs = plugin.getGm().getSelectedGame();
+                    plugin.getGem().createJoinMenu(p);
                     break;
                 case "lobby":
                     plugin.getUim().openContentInventory(p, plugin.getUim().getMenus("lobby"));

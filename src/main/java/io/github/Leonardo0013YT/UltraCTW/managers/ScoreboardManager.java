@@ -9,6 +9,7 @@ import io.github.Leonardo0013YT.UltraCTW.interfaces.Game;
 import io.github.Leonardo0013YT.UltraCTW.objects.Level;
 import io.github.Leonardo0013YT.UltraCTW.team.Team;
 import io.github.Leonardo0013YT.UltraCTW.utils.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class ScoreboardManager {
@@ -107,6 +108,16 @@ public class ScoreboardManager {
         CTWPlayer ctw = plugin.getDb().getCTWPlayer(p);
         if (ctw == null) return s;
         Level level = plugin.getLvl().getLevel(p);
+        for (ChatColor color : t1.getColors()) {
+            if (s.contains("<T1:WOOL:"+color.name()+">")) {
+                s = s.replace("<T1:WOOL:" + color.name() + ">", Utils.getWoolString(t1, color));
+            }
+        }
+        for (ChatColor color : t2.getColors()) {
+            if (s.contains("<T2:WOOL:"+color.name()+">")) {
+                s = s.replace("<T2:WOOL:" + color.name() + ">", Utils.getWoolString(t2, color));
+            }
+        }
         return s.replace("<levelUp>", String.valueOf(level.getLevelUp()))
                 .replace("<date>", Utils.getDate())
                 .replace("<id>", String.valueOf(game.getId()))

@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.samjakob.spigui.SpiGUI;
 import de.slikey.effectlib.EffectManager;
 import io.github.Leonardo0013YT.UltraCTW.adapters.ICTWPlayerAdapter;
 import io.github.Leonardo0013YT.UltraCTW.cmds.*;
@@ -15,6 +16,7 @@ import io.github.Leonardo0013YT.UltraCTW.fanciful.FancyMessage;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.CTWPlayer;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.Game;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.IDatabase;
+import io.github.Leonardo0013YT.UltraCTW.kiteditor.EditorManager;
 import io.github.Leonardo0013YT.UltraCTW.listeners.*;
 import io.github.Leonardo0013YT.UltraCTW.managers.*;
 import io.github.Leonardo0013YT.UltraCTW.menus.GameMenu;
@@ -38,6 +40,8 @@ public class UltraCTW extends JavaPlugin {
 
     private static UltraCTW instance;
     private Gson ctw;
+    
+    private static SpiGUI gui;
     private Settings arenas, lang, menus, kits, sources, windance, wineffect, killsound, taunt, trail, killeffect, shopkeepers, levels, shop;
     private boolean debugMode, stop = false;
     private GameManager gm;
@@ -70,6 +74,7 @@ public class UltraCTW extends JavaPlugin {
     private MultiplierManager mm;
     private EffectUtils eu;
     private EffectManager em;
+    private EditorManager ekm;
 
     public static UltraCTW get() {
         return instance;
@@ -82,6 +87,7 @@ public class UltraCTW extends JavaPlugin {
         instance = this;
         getConfig().options().copyDefaults(true);
         vc = new VersionController(this);
+        gui = new SpiGUI(this);
         setupSounds();
         saveConfig();
         ctw = new GsonBuilder().registerTypeAdapter(CTWPlayer.class, new ICTWPlayerAdapter()).create();
@@ -106,6 +112,7 @@ public class UltraCTW extends JavaPlugin {
         wc = new WorldController(this);
         db = new MySQLDatabase(this);
         cm = new ConfigManager(this);
+        ekm = new EditorManager();
         if (getCm().isBungeeModeEnabled()) {
             getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
             sendLogMessage("§eLoading options for BungeeMode...");
@@ -146,6 +153,7 @@ public class UltraCTW extends JavaPlugin {
         eu = new EffectUtils(this);
         new ProtocolLib(this);
         getCommand("ctws").setExecutor(new SetupCMD(this));
+        getCommand("globaltoggle").setExecutor(new GlobalToggleCMD());
         getCommand("ctw").setExecutor(new CTWCMD(this));
         getCommand("leave").setExecutor(new LeaveCommand(this));
         getCommand("join").setExecutor(new JoinCommand(this));
@@ -156,6 +164,7 @@ public class UltraCTW extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SetupListener(this), this);
         getServer().getPluginManager().registerEvents(new MenuListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
         getServer().getPluginManager().registerEvents(new WorldListener(this), this);
         if (getCm().isBungeeModeEnabled()){
             sendLogMessage("§eLoading Listeners for BungeeMode...");
@@ -478,4 +487,10 @@ public class UltraCTW extends JavaPlugin {
     public EffectManager getEffectManager() {
         return em;
     }
+
+    public EditorManager getEkm() {
+        return ekm;
+    }
+
+    public SpiGUI getGuiCreator() { return gui; }
 }

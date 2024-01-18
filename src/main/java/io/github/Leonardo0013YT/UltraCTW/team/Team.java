@@ -24,6 +24,7 @@ public class Team {
     private final ArrayList<ChatColor> colors = new ArrayList<>();
     private final Map<Location, ChatColor> wools = new HashMap<>();
     private final Map<Location, ChatColor> spawners = new HashMap<>();
+    private final Map<ChatColor, Location> woolsLoc = new HashMap<>();
     private final Map<ChatColor, Item> dropped = new HashMap<>();
     private final Map<ChatColor, ArrayList<UUID>> inProgress = new HashMap<>();
     private final ArrayList<ChatColor> captured = new ArrayList<>();
@@ -56,6 +57,7 @@ public class Team {
         for (String c : plugin.getArenas().getConfig().getConfigurationSection(path + ".wools").getKeys(false)) {
             String nowPath = path + ".wools." + c;
             wools.put(Utils.getStringLocation(plugin.getArenas().get(nowPath + ".loc")), ChatColor.valueOf(plugin.getArenas().get(nowPath + ".color")));
+            woolsLoc.put(ChatColor.valueOf(plugin.getArenas().get(nowPath + ".color")), Utils.getStringLocation(plugin.getArenas().get(nowPath + ".loc")));
         }
         colors.addAll(wools.values());
         colors.forEach(c -> inProgress.put(c, new ArrayList<>()));
@@ -205,6 +207,9 @@ public class Team {
 
     public Map<Location, ChatColor> getWools() {
         return this.wools;
+    }
+    public Map<ChatColor, Location> getWoolsLoc() {
+        return this.woolsLoc;
     }
 
     public String getName() {

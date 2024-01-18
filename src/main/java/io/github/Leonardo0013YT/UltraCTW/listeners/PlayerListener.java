@@ -5,6 +5,7 @@ import de.Herbystar.TTA.TTA_Methods;
 import io.github.Leonardo0013YT.UltraCTW.UltraCTW;
 import io.github.Leonardo0013YT.UltraCTW.api.events.CTWNPCInteractEvent;
 import io.github.Leonardo0013YT.UltraCTW.api.events.PlayerLoadEvent;
+import io.github.Leonardo0013YT.UltraCTW.cmds.GlobalToggleCMD;
 import io.github.Leonardo0013YT.UltraCTW.cosmetics.trails.Trail;
 import io.github.Leonardo0013YT.UltraCTW.enums.NPCType;
 import io.github.Leonardo0013YT.UltraCTW.enums.State;
@@ -12,6 +13,7 @@ import io.github.Leonardo0013YT.UltraCTW.game.GamePlayer;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.CTWPlayer;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.Game;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.NPC;
+import io.github.Leonardo0013YT.UltraCTW.kiteditor.EditorManager;
 import io.github.Leonardo0013YT.UltraCTW.objects.Squared;
 import io.github.Leonardo0013YT.UltraCTW.team.Team;
 import io.github.Leonardo0013YT.UltraCTW.utils.CenterMessage;
@@ -58,7 +60,15 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         plugin.getDb().loadPlayer(p);
-        if (plugin.getCm().isBungeeModeEnabled() && plugin.getGm().getSelectedGame() != null){
+        for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
+            if (!otherPlayer.getWorld().getName().equalsIgnoreCase(p.getWorld().getName())) {
+                p.hidePlayer(otherPlayer);
+            }
+            Game game = plugin.getGm().getGameByPlayer(otherPlayer);
+            if (game == null) { continue; }
+            otherPlayer.hidePlayer(p);
+        }
+        if (plugin.getCm().isBungeeModeEnabled() && plugin.getGm().getSelectedGame() != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -119,7 +129,7 @@ public class PlayerListener implements Listener {
         plugin.getSb().remove(p);
         plugin.getDb().savePlayer(p.getUniqueId(), false);
         plugin.getGm().removePlayerGame(p, true);
-        NametagEdit.getApi().clearNametag(p);
+        //NametagEdit.getApi().clearNametag(p);
     }
 
     @EventHandler
@@ -175,7 +185,7 @@ public class PlayerListener implements Listener {
                 msg = formatLobby(p, e.getMessage());
                 e.getRecipients().addAll(g.getCached());
             } else {
-                if (ChatColor.stripColor(e.getMessage()).startsWith("!") || ChatColor.stripColor(e.getMessage()).startsWith("@") || g.isState(State.FINISH)) {
+                if (ChatColor.stripColor(e.getMessage()).startsWith("!") || ChatColor.stripColor(e.getMessage()).startsWith("@") || g.isState(State.FINISH) || GlobalToggleCMD.isGlobalToggle(p)) {
                     msg = formatGame(p, t, e.getMessage());
                     e.getRecipients().addAll(g.getCached());
                 } else {
@@ -312,27 +322,28 @@ public class PlayerListener implements Listener {
             ctw.addWoolCaptured();
             plugin.getEffectUtils().woolPlacedEffect(p.getLocation().add(0.0,1.0,0.0));
 
-            team.sendTitle(plugin.getLang().get("titles.teamCaptured.title"), plugin.getLang().get("titles.teamCaptured.subtitle").replaceAll("<player>", p.getName()).replaceAll("<color>", c + "").replaceAll("<tcolor>", team.getColor() + "").replace("<woolname>", Utils.getWoolColor(c)), 0, 30, 10);
+            team.sendTitle(plugin.getLang().get("titles.teamCaptured.title").replace("<player>", p.getName()).replace("<color>", c + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(c))), plugin.getLang().get("titles.teamCaptured.subtitle").replaceAll("<player>", p.getName()).replaceAll("<color>", c + "").replaceAll("<tcolor>", team.getColor() + "").replace("<woolname>", Utils.getWoolColor(c)), 0, 30, 10);
             for (String s : plugin.getLang().getList("messages.teamCaptured")){
                 team.sendMessage(s.replaceAll("&", "§").replaceAll("<tcolor>", team.getColor() + "").replaceAll("<player>", p.getDisplayName()).replaceAll("<color>", c + "").replace("<woolname>", Utils.getWoolColor(c)));
             }
             team.getCaptured().add(c);
+            //team.getColors().remove(c);
 
             g.getTeams().values().stream().filter(t -> t.getId() != team.getId()).forEach(t -> {
-                t.sendTitle(plugin.getLang().get("titles.otherCaptured.title"), plugin.getLang().get("titles.otherCaptured.subtitle").replaceAll("<player>", p.getName()).replaceAll("<color>", c + "").replaceAll("<tcolor>", team.getColor() + "").replace("<woolname>", Utils.getWoolColor(c)), 0, 30, 10);
+                t.sendTitle(plugin.getLang().get("titles.otherCaptured.title").replace("<player>", p.getName()).replace("<color>", c + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(c))), plugin.getLang().get("titles.otherCaptured.subtitle").replaceAll("<player>", p.getName()).replaceAll("<color>", c + "").replaceAll("<tcolor>", team.getColor() + "").replace("<woolname>", Utils.getWoolColor(c)), 0, 30, 10);
                 for (String s : plugin.getLang().getList("messages.otherCaptured")){
                     t.sendMessage(s.replaceAll("&", "§").replaceAll("<tcolor>", team.getColor() + "").replaceAll("<player>", p.getDisplayName()).replaceAll("<color>", c + "").replace("<woolname>", Utils.getWoolColor(c)));
                 }
             });
             team.playSound(plugin.getCm().getCaptured(), 1.0f, 1.0f);
-            NametagEdit.getApi().setSuffix(p, " " + Utils.getWoolsTag(team));
+            //NametagEdit.getApi().setSuffix(p, " " + Utils.getWoolsTag(team));
             if (team.checkWools()) {
                 g.win(team);
                 g.getTeams().values().stream().filter(t -> (t.getId() != team.getId())).forEach(t -> {
                     for (Player loses : t.getMembers()){
                         CTWPlayer lose = plugin.getDb().getCTWPlayer(loses);
                         lose.setLoses(lose.getLoses() + 1);
-                        lose.setXp(lose.getXp() + 10);
+                        lose.setXp(lose.getXp() + plugin.getCm().getXpLose());
                         lose.addCoins(10);
                         Utils.sendLoseRewards(plugin, loses);
                         if (plugin.getCm().isLoseCommands()) {
@@ -352,8 +363,9 @@ public class PlayerListener implements Listener {
             if (item != null) {
                 String co = NBTEditor.getString(item, "TEAM", "WOOL", "CAPTURE");
                 if (co != null) {
-                    e.getBlockPlaced().setType(Material.WOOL);
-                    removeFromProgress(p, item, team, XMaterial.matchXMaterial(item));
+                    e.setCancelled(true);
+                    //e.getBlockPlaced().setType(Material.WOOL);
+                    //removeFromProgress(p, item, team, XMaterial.matchXMaterial(item));
                 }
             }
         }
@@ -424,9 +436,18 @@ public class PlayerListener implements Listener {
             CTWPlayer ctw = plugin.getDb().getCTWPlayer(p);
             ctw.setWalked(ctw.getWalked() + 1);
         }
-        if (to.getBlockY() < -15) {
+        if ((to.getBlockX() >= 170 || to.getBlockX() <= -170) || (to.getBlockZ() >= 130 || to.getBlockZ() <= -130)) {
             if (plugin.getCm().isInstaKillOnVoidCTW()) {
-                p.damage(1000);
+                EntityDamageEvent entityDamageEvent = new EntityDamageEvent(null, EntityDamageEvent.DamageCause.VOID, 1000);
+                p.damage(1000, entityDamageEvent.getEntity());
+                p.setLastDamageCause(entityDamageEvent);
+            }
+        }
+        if (to.getBlockY() <= 15 || to.getBlockY() > 111) {
+            if (plugin.getCm().isInstaKillOnVoidCTW()) {
+                EntityDamageEvent entityDamageEvent = new EntityDamageEvent(null, EntityDamageEvent.DamageCause.VOID, 1000);
+                p.damage(1000, entityDamageEvent.getEntity());
+                p.setLastDamageCause(entityDamageEvent);
             }
         }
         if (g.isState(State.FINISH)) {
@@ -526,6 +547,12 @@ public class PlayerListener implements Listener {
         }
         Team team = g.getTeamPlayer(p);
         if (team == null) return;
+        if (team.getCaptured().contains(c)) {
+            e.setCancelled(true);
+            p.sendMessage(plugin.getLang().get("messages.woolCaptured"));
+            e.getItem().remove();
+            return;
+        }
         if (!team.getColors().contains(c)) {
             e.setCancelled(true);
             p.sendMessage(plugin.getLang().get("messages.noYourWool"));
@@ -540,20 +567,23 @@ public class PlayerListener implements Listener {
         team.getInProgress().putIfAbsent(c, new ArrayList<>());
         if (!team.getInProgress().get(c).contains(p.getUniqueId())) {
             team.getInProgress().get(c).add(p.getUniqueId());
-            team.sendTitle(plugin.getLang().get("titles.teamPickup.title"),plugin.getLang().get("titles.teamPickup.subtitle").replace("<player>", p.getName()).replace("<color>", c + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(c))),0,40,0);
+            team.sendTitle(plugin.getLang().get("titles.teamPickup.title").replace("<player>", p.getName()).replace("<color>", c + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(c))),
+                    plugin.getLang().get("titles.teamPickup.subtitle").replace("<player>", p.getName()).replace("<color>", c + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(c))),0,40,0);
             team.sendMessage(plugin.getLang().get("messages.teamPickup").replace("<player>", p.getName()).replace("<color>", c + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(c))));
             team.playSound(plugin.getCm().getPickUpTeam(), 1.0f, 1.0f);
             GamePlayer gp = g.getGamePlayer(p);
             CTWPlayer ctw = plugin.getDb().getCTWPlayer(p);
             int gcp = (int) plugin.getCm().getGCoinsPickup();
+            if (g.getPlayers().size() >= 4) {
+                ctw.addCoins(plugin.getCm().getCoinsPickup());
+                ctw.setXp(ctw.getXp() + plugin.getCm().getXpPickup());
+            }
             gp.addCoins(gcp);
-            ctw.addCoins(plugin.getCm().getCoinsPickup());
-            ctw.setXp(ctw.getXp() + plugin.getCm().getXpPickup());
             ctw.addWoolStolen();
             gp.setWoolStolen(gp.getWoolStolen() + 1);
             sendTab(p);
             p.sendMessage(plugin.getLang().get("messages.woolPickup").replace("<gold>", String.valueOf(gcp)).replace("<woolname>", Utils.getWoolColor(c)));
-            NametagEdit.getApi().setSuffix(p, " " + Utils.getWoolsTag(team));
+            //NametagEdit.getApi().setSuffix(p, " " + Utils.getWoolsTag(team));
             if (plugin.getCm().isSupportItems()){
                 ItemStack item = new ItemStack(322, 8);
                 ItemStack chestplate = new ItemStack(311, 1);
@@ -561,14 +591,25 @@ public class PlayerListener implements Listener {
                     p.getInventory().addItem(item);
                     p.getInventory().setChestplate(chestplate);
                     p.sendMessage(plugin.getLang().get("messages.equipement"));
-                    if (!p.getInventory().getChestplate().equals(chestplate)){
+                    p.getInventory().addItem(new ItemStack(Material.SANDSTONE, 96));
+                    p.getInventory().addItem(new ItemStack(Material.ARROW, 8));
+                    p.getInventory().setHelmet(i.getItemStack());
+                    if (!p.getInventory().getChestplate().equals(chestplate)) {
                         p.getInventory().addItem(item);
+                    }
+                    for (int varI = 0; varI < p.getInventory().getSize(); varI++) {
+                        ItemStack varItem = p.getInventory().getItem(varI);
+                        if (varItem == null || varItem.getType().equals(Material.AIR)) { continue; }
+                        if (varItem.getType().equals(Material.STONE_SWORD)) {
+                            varItem.setAmount(0);
+                            p.getInventory().setItem(varI, new ItemStack(Material.IRON_SWORD));
+                        }
                     }
                 }
             }
             ChatColor finalC = c;
             g.getTeams().values().stream().filter(t -> t.getId() != team.getId()).forEach(t -> {
-                t.sendTitle(plugin.getLang().get("titles.otherPickup.title"),plugin.getLang().get("titles.otherPickup.subtitle").replace("<player>", p.getName()).replace("<color>", finalC + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(finalC))),0,40,0);
+                t.sendTitle(plugin.getLang().get("titles.otherPickup.title").replace("<player>", p.getName()).replace("<color>", finalC + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(finalC))),plugin.getLang().get("titles.otherPickup.subtitle").replace("<player>", p.getName()).replace("<color>", finalC + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(finalC))),0,40,0);
                 t.sendMessage(plugin.getLang().get("messages.otherPickup").replace("<player>", p.getName()).replace("<color>", finalC + "").replace("<tcolor>", team.getColor() + "").replace("<woolname>", ChatColor.stripColor(Utils.getWoolColor(finalC))));
             });
             others.forEach(t -> t.playSound(plugin.getCm().getPickUpOthers(), 1.0f, 1.0f));
@@ -698,6 +739,7 @@ public class PlayerListener implements Listener {
         Player d = p.getKiller();
         Game g = plugin.getGm().getGameByPlayer(p);
         if (g == null) return;
+        Team team = g.getTeamPlayer(p);
         if (plugin.getCm().isDCMDEnabled()) {
             plugin.getCm().getDeathCommands().forEach(c -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replaceAll("<player>", p.getName())));
         }
@@ -705,26 +747,41 @@ public class PlayerListener implements Listener {
         e.setDroppedExp(0);
         e.setDeathMessage(null);
         if (d != null) {
+            d.setHealth(20.0D);
             CTWPlayer sk = plugin.getDb().getCTWPlayer(d);
             if (sk != null) {
                 if (plugin.getCm().isKCMDEnabled()) {
                     plugin.getCm().getKillCommands().forEach(c -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replaceAll("<player>", d.getName())));
                 }
-                if (p.getLastDamageCause() == null || p.getLastDamageCause().getCause() == null) {
+                /*if (p.getLastDamageCause() == null) {
                     EntityDamageEvent.DamageCause cause = EntityDamageEvent.DamageCause.CONTACT;
                     plugin.getTm().execute(p, cause, g, sk.getTaunt());
+                } else if (p.getLastDamageCause().getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+                    plugin.getTm().execute(p, EntityDamageEvent.DamageCause.VOID, g, sk.getTaunt());
                 } else {
                     EntityDamageEvent.DamageCause cause = p.getLastDamageCause().getCause();
                     plugin.getTm().execute(p, cause, g, sk.getTaunt());
-                }
+                }*/
+                EntityDamageEvent.DamageCause cause = p.getLastDamageCause().getCause();
+                plugin.getTm().execute(p, cause, g, sk.getTaunt());
                 plugin.getKem().execute(g, d, p, p.getLocation(), sk.getKillEffect());
                 plugin.getKsm().execute(d, p, sk.getKillSound());
+                for (ItemStack item : p.getInventory().getContents()) {
+                    if (item == null || item.getType().equals(Material.AIR)) { continue; }
+                    if (!item.getType().equals(Material.WOOL)) { continue; }
+                    ChatColor c = ChatColor.valueOf(NBTEditor.getString(item, "TEAM", "WOOL", "CAPTURE"));
+                    if (team.getColors().contains(c)) {
+                        d.getInventory().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
+                        break;
+                    }
+                }
             } else {
                 executeTauntDefault(p, g);
             }
         } else {
             executeTauntDefault(p, g);
         }
+
         plugin.getTgm().executeRewards(p, p.getMaxHealth());
 
         new BukkitRunnable() {
@@ -898,9 +955,15 @@ public class PlayerListener implements Listener {
         p.teleport(team.getSpawn());
         p.setFoodLevel(20);
         plugin.getKm().giveDefaultKit(p, g, team);
-        NametagEdit.getApi().setNametag(p, team.getPrefix() + " " + team.getColor(), "");
+        if (EditorManager.getInstance().playerExist(p)) {
+            EditorManager.getInstance().giveSavedKit(p);
+        } else {
+            EditorManager.getInstance().giveDefaultKit(p);
+        }
+        //NametagEdit.getApi().setNametag(p, team.getPrefix() + " " + team.getColor(), "");
         for (ChatColor c : team.getColors()) {
             if (team.getInProgress().get(c).isEmpty()) continue;
+            if (team.getCaptured().contains(c)) continue;
             team.getInProgress().get(c).remove(p.getUniqueId());
             if (team.getInProgress().get(c).isEmpty()) {
                 g.sendGameMessage(plugin.getLang().get("messages.lost").replaceAll("<tcolor>", team.getColor() + "").replaceAll("<player>", p.getDisplayName()).replaceAll("<color>", c + "").replaceAll("<wool>", c + "⬛"));
@@ -933,7 +996,8 @@ public class PlayerListener implements Listener {
     }
 
     public void sendTab(Player p){
-        Game g = plugin.getGm().getSelectedGame();
+        Game g = plugin.getGm().getGameByPlayer(p);
+        if (g == null) { return; }
         GamePlayer gp = g.getGamePlayer(p);
         TTA_Methods.sendTablist(p, plugin.getLang().get("messages.tabheader").replace("<kills>", String.valueOf(gp.getKills())).replace("<deaths>", String.valueOf(gp.getDeaths())).replace("<assists>", String.valueOf(gp.getAssists())).replace("<woolStolen>", String.valueOf(gp.getWoolStolen())).replace("<killsWoolHolder>", String.valueOf(gp.getKillsWoolHolder())), plugin.getLang().get("messages.tabheather"));
     }

@@ -21,7 +21,7 @@ public class ConfigManager {
     private Material back, redPanelMaterial;
     private Sound streak2, streak3, streak4, streak5, upgradeSound, cancelStartSound, wineffectschicken, wineffectsvulcanfire, wineffectvulcanwool, wineffectnotes, killEffectTNT, killEffectSquid;
     private XSound pickUpTeam, pickUpOthers, captured;
-    private int gCoinsPickup, xpPickup, coinsPickup, updatePlayersPlaceholder, limitOfYSpawn, itemLobbySlot, itemLobby2Slot, maxMultiplier, gCoinsKills, gCoinsWins, gCoinsAssists, gCoinsCapture, coinsKill, coinsWin, coinsAssists, coinsCapture, xpKill, xpWin, xpAssists, xpCapture, starting, progressBarAmount, timeToKill;
+    private int xpDeath, xpLose, gCoinsPickup, xpPickup, coinsPickup, updatePlayersPlaceholder, limitOfYSpawn, itemLobbySlot, itemLobby2Slot, maxMultiplier, gCoinsKills, gCoinsWins, gCoinsAssists, gCoinsCapture, coinsKill, coinsWin, coinsAssists, coinsCapture, xpKill, xpWin, xpAssists, xpCapture, starting, progressBarAmount, timeToKill;
     private double bountyMin, bountyMax, bountyPerKill;
     private String bungeeModeLobbyServer, itemLobbyCMD, itemLobby2CMD;
     private List<String> winCommands, levelCommands, loseCommands, killCommands, deathCommands;
@@ -99,6 +99,8 @@ public class ConfigManager {
         this.xpAssists = plugin.getConfig().getInt("gameDefaults.xp.assists");
         this.xpCapture = plugin.getConfig().getInt("gameDefaults.xp.capture");
         this.xpPickup = plugin.getConfig().getInt("gameDefaults.xp.pickup");
+        this.xpLose = plugin.getConfig().getInt("gameDefaults.xp.lose");
+        this.xpDeath = plugin.getConfig().getInt("gameDefaults.xp.death");
         this.upgradeSound = Sound.valueOf(plugin.getConfig().getString("sounds.upgrade"));
         this.starting = plugin.getConfig().getInt("gameDefaults.starting");
         this.progressBarAmount = plugin.getConfig().getInt("progressBarAmount");
@@ -311,6 +313,14 @@ public class ConfigManager {
 
     public int getXpKill() {
         return this.xpKill;
+    }
+
+    public int getXpDeath() {
+        return this.xpDeath;
+    }
+
+    public int getXpLose() {
+        return this.xpLose;
     }
 
 

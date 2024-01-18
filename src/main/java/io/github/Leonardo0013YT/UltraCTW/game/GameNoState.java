@@ -4,9 +4,11 @@ import com.nametagedit.plugin.NametagEdit;
 import de.Herbystar.TTA.BossBar.NMS_BossBar;
 import de.Herbystar.TTA.TTA_Methods;
 import io.github.Leonardo0013YT.UltraCTW.UltraCTW;
+import io.github.Leonardo0013YT.UltraCTW.customevents.CTWPlayerJoinGameEvent;
 import io.github.Leonardo0013YT.UltraCTW.enums.NPCType;
 import io.github.Leonardo0013YT.UltraCTW.enums.State;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.*;
+import io.github.Leonardo0013YT.UltraCTW.kiteditor.EditorManager;
 import io.github.Leonardo0013YT.UltraCTW.objects.Squared;
 import io.github.Leonardo0013YT.UltraCTW.team.Team;
 import io.github.Leonardo0013YT.UltraCTW.utils.Utils;
@@ -95,9 +97,13 @@ public class GameNoState implements Game {
 
     @Override
     public void addPlayer(Player p) {
+        Game game = this;
+        p.teleport(lobby);
+        CTWPlayerJoinGameEvent event = new CTWPlayerJoinGameEvent(p, game);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) { return; }
         cached.forEach(o -> o.hidePlayer(p));
         gamePlayer.put(p, new GamePlayer(p));
-        p.teleport(lobby);
         Utils.setCleanPlayer(p);
         inLobby.add(p);
         cached.add(p);
@@ -105,8 +111,7 @@ public class GameNoState implements Game {
         Utils.updateSB(p);
         plugin.getStm().resetStreak(p);
         plugin.getTgm().removeTag(p);
-        p.setGameMode(GameMode.SPECTATOR);
-        Game game = plugin.getGm().getSelectedGame();
+        //p.setGameMode(GameMode.SPECTATOR);
         if (isState(State.WAITING) || isState(State.STARTING)) {
             for (String s : plugin.getLang().get(p, "messages.newPlayer").split("\\n")){
                 sendGameMessage(s.replaceAll("<player>", p.getDisplayName()).replaceAll("<size>", game.getPlayers().size() + "").replaceAll("<max>", game.getMax() + ""));
@@ -117,6 +122,19 @@ public class GameNoState implements Game {
         checkStart();
         sendTabNoGame(p);
         morePlayers();
+
+        /*for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
+            if (spectator == null) { break; }
+            if (!otherPlayer.getWorld().getName().equals(spectator.getWorld().getName())) {
+                p.hidePlayer(otherPlayer);
+            }
+        }
+        for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
+            if (spectator == null) { break; }
+            if (!spectator.getWorld().getName().equals(otherPlayer.getWorld().getName())) {
+                otherPlayer.hidePlayer(p);
+            }
+        }*/
     }
 
     @Override
@@ -151,8 +169,8 @@ public class GameNoState implements Game {
         }
     }
 
-    public void sendTab(Player p){
-        Game g = plugin.getGm().getSelectedGame();
+    public void sendTab(Player p) {
+        Game g = this;
         GamePlayer gp = g.getGamePlayer(p);
         TTA_Methods.sendTablist(p, plugin.getLang().get("messages.tabheader").replace("<kills>", String.valueOf(gp.getKills())).replace("<deaths>", String.valueOf(gp.getDeaths())).replace("<assists>", String.valueOf(gp.getAssists())).replace("<woolStolen>", String.valueOf(gp.getWoolStolen())).replace("<killsWoolHolder>", String.valueOf(gp.getKillsWoolHolder())), plugin.getLang().get("messages.tabheather"));
     }
@@ -266,6 +284,11 @@ public class GameNoState implements Game {
                     } else {
                         on.teleport(t.getSpawn());
                         plugin.getKm().giveDefaultKit(on, this, t);
+                        if (EditorManager.getInstance().playerExist(on)) {
+                            EditorManager.getInstance().giveSavedKit(on);
+                        } else {
+                            EditorManager.getInstance().giveDefaultKit(on);
+                        }
                         Utils.updateSB(on);
                         inGame.add(on);
                         sendTab(on);
@@ -276,7 +299,7 @@ public class GameNoState implements Game {
                         for (Location s : npcShop) {
                             plugin.getSkm().spawnShopKeeper(on, s, ctw.getShopKeeper(), NPCType.SHOP);
                         }
-                        NametagEdit.getApi().setNametag(on, t.getPrefix() + " " + t.getColor(), "");
+                        //NametagEdit.getApi().setNametag(on, t.getPrefix() + " " + t.getColor(), "");
                         for (Player c : cached) {
                             c.showPlayer(on);
                             on.showPlayer(c);
@@ -291,23 +314,17 @@ public class GameNoState implements Game {
             time++;
             teams.values().forEach(Team::updateSpawner);
             for(Player on : cached){
+                for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
+                    if (!otherPlayer.getWorld().getName().equals(on.getWorld().getName())) {
+                        otherPlayer.hidePlayer(on);
+                        on.hidePlayer(otherPlayer);
+                    }
+                }
                 Team t = getTeamPlayer(on);
                 if (t == null) {
                     sendGameActionBar(on, plugin.getLang().get("actionbar.noTeam"));
                 } else {
                     sendGameActionBar(on, plugin.getLang().get("actionbar.myTeam").replaceAll("<tcolor>", t.getColor() + "").replaceAll("<team>", t.getName()));
-                }
-                if (time == 60 || time == 300 || time == 540 || time == 780 || time == 1020){
-                    on.sendMessage(plugin.getLang().get("tips.1"));
-                }
-                if (time == 120 || time == 360 || time == 600 || time == 840 || time == 1080){
-                    on.sendMessage(plugin.getLang().get("tips.2"));
-                }
-                if (time == 180 || time == 420 || time == 660 || time == 900 || time == 1140){
-                    on.sendMessage(plugin.getLang().get("tips.3"));
-                }
-                if (time == 240 || time == 480 || time == 720 || time == 960 || time == 1200){
-                    on.sendMessage(plugin.getLang().get("tips.4"));
                 }
             }
         }
@@ -415,8 +432,8 @@ public class GameNoState implements Game {
                         if (on == null || !on.isOnline()) continue;
                         Game g = plugin.getGm().getSelectedGame();
                         plugin.getGm().addPlayerGame(on, g.getId());
-                        NametagEdit.getApi().clearNametag(on);
-                        NametagEdit.getApi().reloadNametag(on);
+                        //NametagEdit.getApi().clearNametag(on);
+                        //NametagEdit.getApi().reloadNametag(on);
                         on.sendMessage(plugin.getLang().get("messages.newGame").replaceAll("<map>", g.getName()));
                     }
                 } else {
@@ -468,6 +485,7 @@ public class GameNoState implements Game {
             gp.setDeaths(gp.getDeaths() + 1);
             CTWPlayer ctw = plugin.getDb().getCTWPlayer(p);
             ctw.setDeaths(ctw.getDeaths() + 1);
+            ctw.setXp(Math.max(ctw.getXp() - plugin.getCm().getXpDeath(), 0));
             sendTab(p);
         }
     }
@@ -534,6 +552,11 @@ public class GameNoState implements Game {
             ctw.setPlayed(ctw.getPlayed() + 1);
             p.teleport(team.getSpawn());
             plugin.getKm().giveDefaultKit(p, this, team);
+            if (EditorManager.getInstance().playerExist(p)) {
+                EditorManager.getInstance().giveSavedKit(p);
+            } else {
+                EditorManager.getInstance().giveDefaultKit(p);
+            }
             Utils.updateSB(p);
             sendTab(p);
             inGame.add(p);
@@ -545,7 +568,7 @@ public class GameNoState implements Game {
             for (Location s : npcShop) {
                 plugin.getSkm().spawnShopKeeper(p, s, ctw.getShopKeeper(), NPCType.SHOP);
             }
-            NametagEdit.getApi().setNametag(p, team.getPrefix() + " " +team.getColor(), "");
+            //NametagEdit.getApi().setNametag(p, team.getPrefix() + " " +team.getColor(), "");
             cached.forEach(o -> o.showPlayer(p));
         }
     }

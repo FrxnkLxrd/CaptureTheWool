@@ -144,4 +144,144 @@ public class ArenaSetup {
         p.sendMessage(plugin.getLang().get("setup.arena.saveGame"));
     }
 
+    public void setPlugin(UltraCTW var1) {
+        this.plugin = var1;
+    }
+
+    public void setP(Player var1) {
+        this.p = var1;
+    }
+
+    public void setName(String var1) {
+        this.name = var1;
+    }
+
+    public void setSchematic(String var1) {
+        this.schematic = var1;
+    }
+
+    public void setLobby(Location var1) {
+        this.lobby = var1;
+    }
+
+    public void setSpectator(Location var1) {
+        this.spectator = var1;
+    }
+
+    public void setMin(int var1) {
+        this.min = var1;
+    }
+
+    public void setTeamSize(int var1) {
+        this.teamSize = var1;
+    }
+
+    public void setWoolSize(int var1) {
+        this.woolSize = var1;
+    }
+
+    public void setAmountTeams(int var1) {
+        this.amountTeams = var1;
+    }
+
+    public void setTeams(HashMap<Integer, TeamSetup> var1) {
+        this.teams = var1;
+    }
+
+    public void setColors(ArrayList<ChatColor> var1) {
+        this.colors = var1;
+    }
+
+    public void setSquareds(ArrayList<Squared> var1) {
+        this.squareds = var1;
+    }
+
+    public void setNpcShop(ArrayList<String> var1) {
+        this.npcShop = var1;
+    }
+
+    public void setNpcKits(ArrayList<String> var1) {
+        this.npcKits = var1;
+    }
+
+    public void setActual(TeamSetup var1) {
+        this.actual = var1;
+    }
+
+    public void setSelection(Selection var1) {
+        this.selection = var1;
+    }
+
+    public void setProtection(Squared var1) {
+        this.protection = var1;
+    }
+
+    public UltraCTW getPlugin() {
+        return this.plugin;
+    }
+
+    public Player getP() {
+        return this.p;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getSchematic() {
+        return this.schematic;
+    }
+
+    public Location getLobby() {
+        return this.lobby;
+    }
+
+    public Location getSpectator() {
+        return this.spectator;
+    }
+
+    public int getMin() {
+        return this.min;
+    }
+
+    public int getTeamSize() {
+        return this.teamSize;
+    }
+
+    public int getWoolSize() {
+        return this.woolSize;
+    }
+
+    public int getAmountTeams() {
+        return this.amountTeams;
+    }
+
+    public ArrayList<ChatColor> getColors() {
+        return this.colors;
+    }
+
+    public ArrayList<Squared> getSquareds() {
+        return this.squareds;
+    }
+
+    public ArrayList<String> getNpcShop() {
+        return this.npcShop;
+    }
+
+    public ArrayList<String> getNpcKits() {
+        return this.npcKits;
+    }
+
+    public TeamSetup getActual() {
+        return this.actual;
+    }
+
+    public Selection getSelection() {
+        return this.selection;
+    }
+
+    public Squared getProtection() {
+        return this.protection;
+    }
+
 }

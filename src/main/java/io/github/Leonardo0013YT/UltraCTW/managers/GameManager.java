@@ -2,10 +2,13 @@ package io.github.Leonardo0013YT.UltraCTW.managers;
 
 import com.nametagedit.plugin.NametagEdit;
 import io.github.Leonardo0013YT.UltraCTW.UltraCTW;
+import io.github.Leonardo0013YT.UltraCTW.customevents.CTWPlayerJoinGameEvent;
+import io.github.Leonardo0013YT.UltraCTW.customevents.CTWPlayerQuitGameEvent;
 import io.github.Leonardo0013YT.UltraCTW.game.GameNoState;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.Game;
 import io.github.Leonardo0013YT.UltraCTW.utils.Utils;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -112,9 +115,12 @@ public class GameManager {
         int id = playerGame.get(p.getUniqueId());
         Game game = games.get(id);
         if (game != null) {
+            CTWPlayerQuitGameEvent event = new CTWPlayerQuitGameEvent(p, game);
+            Bukkit.getPluginManager().callEvent(event);
+            if (event.isCancelled()) { return; }
             game.removePlayer(p);
         }
-        NametagEdit.getApi().clearNametag(p);
+        //NametagEdit.getApi().clearNametag(p);
         playerGame.remove(p.getUniqueId());
         Utils.updateSB(p);
         if (plugin.getCm().isBungeeModeEnabled()) {

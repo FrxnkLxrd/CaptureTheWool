@@ -1,6 +1,9 @@
 package io.github.Leonardo0013YT.UltraCTW.menus;
 
+import com.samjakob.spigui.buttons.SGButton;
+import com.samjakob.spigui.menu.SGMenu;
 import io.github.Leonardo0013YT.UltraCTW.UltraCTW;
+import io.github.Leonardo0013YT.UltraCTW.config.Settings;
 import io.github.Leonardo0013YT.UltraCTW.enums.State;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.CTWPlayer;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.Game;
@@ -10,8 +13,11 @@ import io.github.Leonardo0013YT.UltraCTW.utils.ItemUtils;
 import io.github.Leonardo0013YT.UltraCTW.utils.NBTEditor;
 import io.github.Leonardo0013YT.UltraCTW.utils.Utils;
 import io.github.Leonardo0013YT.UltraCTW.xseries.XMaterial;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -44,8 +50,96 @@ public class GameMenu {
         p.openInventory(inv);
     }
 
-    public void createJoinMenu(Player p, Game game){
-        Inventory inv = Bukkit.createInventory(null, 45, plugin.getLang().get("menus.join.title"));
+    private String getColor(String var1) {
+        return ChatColor.translateAlternateColorCodes('&', var1);
+    }
+
+    public void createJoinMenu(Player p){
+        Settings menus = UltraCTW.get().getMenus();
+        YamlConfiguration config = menus.getConfig();
+        int varRows = config.getInt("MenuSelector.Rows");
+        String varTitle = config.getString("MenuSelector.Title");
+        SGMenu menu = UltraCTW.get().getGuiCreator().create(varTitle, varRows);
+        menu.setAutomaticPaginationEnabled(false);
+
+        for (String varKey : config.getConfigurationSection("MenuSelector.Arenas").getKeys(false)) {
+            String path = "MenuSelector.Arenas."+varKey+".";
+            String varGameName = config.getString(path+"GameName");
+            Game varGame = UltraCTW.get().getGm().getGameByName(varGameName);
+            if (varGame == null) { continue; }
+
+            ItemStack wool = new ItemUtils(XMaterial.WHITE_WOOL).build();
+            ItemMeta meta = wool.getItemMeta();
+            meta.setDisplayName(getColor(config.getString(path+"Name").replace("%name%", varGame.getName())));
+            String varStatus;
+
+            if (varGame.isState(State.WAITING)){
+                if (wool.getDurability() != (short) 0){
+                    wool.setDurability((short) 0);
+                }
+                varStatus = plugin.getLang().get("menus.join.wool.waiting");
+            }
+            else if (varGame.isState(State.RESTARTING)) {
+                if (wool.getDurability() != (short) 7) {
+                    wool.setDurability((short) 7);
+                }
+                varStatus = plugin.getLang().get("menus.join.wool.restarting");
+            }
+            else if (varGame.isState(State.FINISH)) {
+                if (wool.getDurability() != (short) 10){
+                    wool.setDurability((short) 10);
+                }
+                varStatus = plugin.getLang().get("menus.join.wool.finish");
+            }
+            else if (varGame.isState(State.STARTING)) {
+                if (wool.getDurability() != (short) 13){
+                    wool.setDurability((short) 13);
+                }
+                varStatus = plugin.getLang().get("menus.join.wool.starting");
+            }
+            else if (varGame.isState(State.GAME)) {
+                if (wool.getDurability() != (short) 14) {
+                    wool.setDurability((short) 14);
+                }
+                varStatus = plugin.getLang().get("menus.join.wool.ingame");
+            } else {
+                varStatus = "N/A";
+            }
+            List<String> lore = config.getStringList(path+"Lore");
+            lore.replaceAll(var1 -> getColor(var1.replace("%status%", varStatus)
+                    .replace("%min%", varGame.getPlayers().size()+"").replace("%max%", varGame.getMax()+"")) );
+            meta.setLore(lore);
+            wool.setItemMeta(meta);
+            SGButton button = new SGButton(wool).withListener(event -> {
+                if (varGame.getPlayers().size() >= varGame.getMax()) {
+                    p.sendMessage(plugin.getLang().get("messages.maxPlayers"));
+                    return;
+                }
+                p.sendMessage(plugin.getLang().get("messages.joinGame").replaceAll("<game>", varGame.getName()));
+                UltraCTW.get().getGm().addPlayerGame(p, varGame.getId());
+            });
+            int varSlot = config.getInt(path+"Slot");
+            menu.setButton(varSlot, button);
+        }
+        for (String varKey : config.getConfigurationSection("MenuSelector.Items").getKeys(false)) {
+            String path = "MenuSelector.Items."+varKey+".";
+            ItemUtils builder = new ItemUtils(XMaterial.matchXMaterial(Material.getMaterial(config.getString(path+"Material"))));
+            builder.setDisplayName(config.getString(path+"Name")).setLoreWithPAPI(p, config.getStringList(path+"Lore"));
+            SGButton button = new SGButton(builder.build()).withListener(event -> {
+                List<String> commands = config.getStringList(path+"Commands");
+                for (String command : commands) {
+                    Bukkit.dispatchCommand(p, command);
+                }
+            });
+            int varSlot = config.getInt(path+"Slot");
+            menu.setButton(varSlot, button);
+        }
+        p.openInventory(menu.getInventory());
+
+
+
+
+        /*Inventory inv = Bukkit.createInventory(null, 45, plugin.getLang().get("menus.join.title"));
         if (game != null){
             inv.setItem(22, getGameItem(game));
         }
@@ -65,7 +159,7 @@ public class GameMenu {
         ItemMeta meta3 = settings.getItemMeta();
         settings.setItemMeta(meta3);
         inv.setItem(40, settings);
-        p.openInventory(inv);
+        p.openInventory(inv);*/
     }
 
     public void createShopMenu(Player p) {
@@ -90,7 +184,7 @@ public class GameMenu {
         return leather;
     }
 
-    private ItemStack getGameItem(Game game){
+    private ItemStack getGameItem(YamlConfiguration config, Game game){
         ItemStack wool = new ItemUtils(XMaterial.WHITE_WOOL).build();
         ItemMeta meta = wool.getItemMeta();
         meta.setDisplayName(plugin.getLang().get("menus.join.wool.nameItem"));

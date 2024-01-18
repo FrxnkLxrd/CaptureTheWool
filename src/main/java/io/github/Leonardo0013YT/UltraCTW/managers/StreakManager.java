@@ -30,7 +30,7 @@ public class StreakManager {
 
     public void resetStreak(Player p) {
         streaks.put(p.getUniqueId(), new Streak(0, 0, false, 0, System.currentTimeMillis()));
-        NametagEdit.getApi().setSuffix(p, "");
+        //NametagEdit.getApi().setSuffix(p, "");
         Utils.updateSB(p);
     }
 
@@ -43,7 +43,7 @@ public class StreakManager {
         } else {
             streak.setKills(0);
         }
-        int amount = getStreak(p);
+        /*int amount = getStreak(p);
         Team t = game.getTeamPlayer(p);
         String c = t.getColor() + "";
         if (amount % 5 == 0) {
@@ -59,19 +59,19 @@ public class StreakManager {
             streak.setPrice(getBounty(amount));
             CTWPlayer ctw = plugin.getDb().getCTWPlayer(p);
             ctw.setBounty(streak.getPrice());
-            game.sendGameMessage(plugin.getLang().get("messages.bounty").replaceAll("<name>", c + p.getName()).replaceAll("<coins>", Utils.format(streak.getPrice())));
-            NametagEdit.getApi().setSuffix(p, " §6" + Utils.format(streak.getPrice()) + "⛂⛃");
+            //game.sendGameMessage(plugin.getLang().get("messages.bounty").replaceAll("<name>", c + p.getName()).replaceAll("<coins>", Utils.format(streak.getPrice())));
+            //NametagEdit.getApi().setSuffix(p, " §6" + Utils.format(streak.getPrice()) + "⛂⛃");
             return;
         }
         if (amount >= 10) {
             streak.setPrice(getBounty(amount));
-            CTWPlayer ctw = plugin.getDb().getCTWPlayer(p);
+            /*CTWPlayer ctw = plugin.getDb().getCTWPlayer(p);
             ctw.setBounty(streak.getPrice());
             if (amount % 5 == 0) {
                 game.sendGameMessage(plugin.getLang().get("messages.bounty").replaceAll("<name>", c + p.getName()).replaceAll("<coins>", Utils.format(streak.getPrice())));
             }
-            NametagEdit.getApi().setSuffix(p, " §6" + Utils.format(streak.getPrice()) + "⛂⛃");
-        }
+            //NametagEdit.getApi().setSuffix(p, " §6" + Utils.format(streak.getPrice()) + "⛂⛃");
+        }*/
     }
 
     public int getStreak(Player p) {

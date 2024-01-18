@@ -2,7 +2,9 @@ package io.github.Leonardo0013YT.UltraCTW.placeholders;
 
 import io.github.Leonardo0013YT.UltraCTW.UltraCTW;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.CTWPlayer;
+import io.github.Leonardo0013YT.UltraCTW.interfaces.Game;
 import io.github.Leonardo0013YT.UltraCTW.objects.Level;
+import io.github.Leonardo0013YT.UltraCTW.team.Team;
 import io.github.Leonardo0013YT.UltraCTW.utils.Utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -213,6 +215,20 @@ public class Placeholders extends PlaceholderExpansion {
         }
         if (id.equals("break")) {
             return "" + sw.getBroken();
+        }
+        if (id.equalsIgnoreCase("team_name")) {
+            Game game = plugin.getGm().getGameByPlayer(p);
+            if (game == null) { return ""; }
+            Team team = game.getTeamPlayer(p);
+            if (team == null) { return ""; }
+            return team.getPrefix();
+        }
+        if (id.equalsIgnoreCase("wools_captured")) {
+            Game game = plugin.getGm().getGameByPlayer(p);
+            if (game == null) { return ""; }
+            Team team = game.getTeamPlayer(p);
+            if (team == null) { return ""; }
+            return Utils.getCapturedString(p, team);
         }
         return null;
     }

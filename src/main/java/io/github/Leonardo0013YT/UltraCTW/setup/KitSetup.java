@@ -59,4 +59,63 @@ public class KitSetup {
         plugin.getKits().save();
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public String getPermission() {
+        return this.permission;
+    }
+
+    public int getSlot() {
+        return this.slot;
+    }
+
+    public int getPage() {
+        return this.page;
+    }
+
+    public HashMap<Integer, KitLevelSetup> getLevels() {
+        return this.levels;
+    }
+
+    public KitLevelSetup getKls() {
+        return this.kls;
+    }
+
+    public boolean isFlag() {
+        return this.flag;
+    }
+
+    public void setPlugin(UltraCTW var1) {
+        this.plugin = var1;
+    }
+
+    public void setName(String var1) {
+        this.name = var1;
+    }
+
+    public void setPermission(String var1) {
+        this.permission = var1;
+    }
+
+    public void setSlot(int var1) {
+        this.slot = var1;
+    }
+
+    public void setPage(int var1) {
+        this.page = var1;
+    }
+
+    public void setLevels(HashMap<Integer, KitLevelSetup> var1) {
+        this.levels = var1;
+    }
+
+    public void setKls(KitLevelSetup var1) {
+        this.kls = var1;
+    }
+
+    public void setFlag(boolean var1) {
+        this.flag = var1;
+    }
 }

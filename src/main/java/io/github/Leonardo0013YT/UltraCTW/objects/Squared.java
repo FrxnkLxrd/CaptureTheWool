@@ -54,4 +54,28 @@ public class Squared {
     public boolean isNoEntry() {
         return this.noEntry;
     }
+
+    public int getXMin() {
+        return this.xMin;
+    }
+
+    public int getXMax() {
+        return this.xMax;
+    }
+
+    public int getYMin() {
+        return this.yMin;
+    }
+
+    public int getYMax() {
+        return this.yMax;
+    }
+
+    public int getZMin() {
+        return this.zMin;
+    }
+
+    public int getZMax() {
+        return this.zMax;
+    }
 }

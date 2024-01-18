@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 @Getter
 @Setter
 public class GamePlayer {
@@ -42,8 +41,8 @@ public class GamePlayer {
         }
         p.getInventory().setContents(inv);
         p.getInventory().setArmorContents(armor);
-        NametagEdit.getApi().clearNametag(p);
-        NametagEdit.getApi().reloadNametag(p);
+        //NametagEdit.getApi().clearNametag(p);
+        //NametagEdit.getApi().reloadNametag(p);
         reset = true;
     }
 

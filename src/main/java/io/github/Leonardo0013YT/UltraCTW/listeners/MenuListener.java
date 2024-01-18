@@ -307,7 +307,7 @@ public class MenuListener implements Listener {
             }
             if (!sw.getShopkeepers().contains(k.getId())) {
                 if (k.needPermToBuy() && !p.hasPermission(k.getPermission())) {
-                    p.sendMessage(plugin.getLang().get(p, "messages.noPermit"));
+                    p.sendMessage(plugin.getLang().get(p, "menus.shopkeeperselector.noPermission"));
                 } else {
                     plugin.getShm().buy(p, k, k.getName());
                 }
@@ -374,7 +374,7 @@ public class MenuListener implements Listener {
             }
             if (!sw.getTrails().contains(k.getId())) {
                 if (k.needPermToBuy() && !p.hasPermission(k.getPermission())) {
-                    p.sendMessage(plugin.getLang().get(p, "messages.noPermit"));
+                    p.sendMessage(plugin.getLang().get(p, "menus.trailsselector.noPermission"));
                 } else {
                     plugin.getShm().buy(p, k, k.getName());
                 }
@@ -441,7 +441,7 @@ public class MenuListener implements Listener {
             }
             if (!sw.getTaunts().contains(k.getId())) {
                 if (k.needPermToBuy() && !p.hasPermission(k.getPermission())) {
-                    p.sendMessage(plugin.getLang().get(p, "messages.noPermit"));
+                    p.sendMessage(plugin.getLang().get(p, "menus.tauntsselector.noPermission"));
                 } else {
                     plugin.getShm().buy(p, k, k.getName());
                 }
@@ -508,7 +508,7 @@ public class MenuListener implements Listener {
             }
             if (!sw.getKillsounds().contains(k.getId())) {
                 if (k.needPermToBuy() && !p.hasPermission(k.getPermission())) {
-                    p.sendMessage(plugin.getLang().get(p, "messages.noPermit"));
+                    p.sendMessage(plugin.getLang().get(p, "menus.killsoundsselector.noPermission"));
                 } else {
                     plugin.getShm().buy(p, k, k.getName());
                 }
@@ -575,7 +575,7 @@ public class MenuListener implements Listener {
             }
             if (!sw.getWineffects().contains(k.getId())) {
                 if (k.needPermToBuy() && !p.hasPermission(k.getPermission())) {
-                    p.sendMessage(plugin.getLang().get(p, "messages.noPermit"));
+                    p.sendMessage(plugin.getLang().get(p, "menus.wineffectsselector.noPermission"));
                 } else {
                     plugin.getShm().buy(p, k, k.getName());
                 }
@@ -642,7 +642,8 @@ public class MenuListener implements Listener {
             }
             if (!sw.getKilleffects().contains(k.getId())) {
                 if (k.needPermToBuy() && !p.hasPermission(k.getPermission())) {
-                    p.sendMessage(plugin.getLang().get(p, "messages.noPermit"));
+                    p.sendMessage(plugin.getLang().get(p, "menus.killeffectsselector.noPermission").replaceAll("<killeffect>", k.getName()));
+                    //p.sendMessage(plugin.getLang().get(p, "messages.noPermit"));
                 } else {
                     plugin.getShm().buy(p, k, k.getName());
                 }
@@ -709,7 +710,7 @@ public class MenuListener implements Listener {
             }
             if (!sw.getWindances().contains(k.getId())) {
                 if (k.needPermToBuy() && !p.hasPermission(k.getPermission())) {
-                    p.sendMessage(plugin.getLang().get(p, "messages.noPermit"));
+                    p.sendMessage(plugin.getLang().get(p, "menus.windancesselector.noPermission"));
                 } else {
                     plugin.getShm().buy(p, k, k.getName());
                 }

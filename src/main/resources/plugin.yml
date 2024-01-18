@@ -4,7 +4,7 @@ version: 2.5.2
 author: Leonardo0013YT
 description: UltraCTW edited by MGDCl
 softdepend: [ PlaceholderAPI ]
-depend: [ NametagEdit, ProtocolLib, WorldEdit, FastAsyncWorldEdit ]
+depend: [ ProtocolLib, WorldEdit, FastAsyncWorldEdit ]
 commands:
   stats:
   ctws:
@@ -17,3 +17,8 @@ commands:
     aliases: [ jugar ]
   shout:
     aliases: [ global, g, grito]
+  kiteditor:
+  savekit:
+  resetkit:
+  globaltoggle:
+    aliases: [ gl ]

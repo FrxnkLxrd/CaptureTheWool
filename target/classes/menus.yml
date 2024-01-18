@@ -714,3 +714,29 @@ menus:
           meta-type: UNSPECIFIC
           display-name: '{SAVE}'
           repair-cost: 1
+
+MenuSelector:
+  Title: '&7CTW Menu'
+  Rows: 5
+  Arenas:
+    Example-1:
+      Name: '&cMap: &f%name%'
+      Lore:
+        - '&7'
+        - '&fState: %status%'
+        - '&7'
+        - '&fPlayers: &a%min%&8/&c%max%'
+        - '&7'
+        - '&aRight-Click to enter'
+      Slot: 1
+      GameName: Strait
+  Items:
+    Example-Item:
+      Material: PAPER
+      Name: '&aPlayer Stats'
+      Lore:
+        - '&7'
+        - '&fKills: &a%ctw_kills%'
+      Slot: 49
+      Commands:
+        - 'ctw join'

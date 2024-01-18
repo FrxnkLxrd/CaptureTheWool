@@ -3,6 +3,7 @@ io\github\Leonardo0013YT\UltraCTW\utils\NBTEditor.class
 io\github\Leonardo0013YT\UltraCTW\managers\MultiplierManager.class
 io\github\Leonardo0013YT\UltraCTW\managers\TauntsManager.class
 io\github\Leonardo0013YT\UltraCTW\menus\UltraInventoryMenu.class
+io\github\Leonardo0013YT\UltraCTW\cmds\kits\ResetKit.class
 io\github\Leonardo0013YT\UltraCTW\enums\TrailType.class
 io\github\Leonardo0013YT\UltraCTW\utils\Utils.class
 io\github\Leonardo0013YT\UltraCTW\managers\ScoreboardManager.class
@@ -10,8 +11,10 @@ io\github\Leonardo0013YT\UltraCTW\cosmetics\windances\WinDanceAnvilLand.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectFireworksLetters$1.class
 io\github\Leonardo0013YT\UltraCTW\tops\Top.class
 io\github\Leonardo0013YT\UltraCTW\cmds\LeaveCommand.class
+io\github\Leonardo0013YT\UltraCTW\customevents\CTWPlayerQuitGameEvent.class
 io\github\Leonardo0013YT\UltraCTW\utils\CenterMessage$DefaultFontInfo.class
 io\github\Leonardo0013YT\UltraCTW\cmds\SetupCMD.class
+io\github\Leonardo0013YT\UltraCTW\cmds\kits\KitEditor.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectNotes.class
 io\github\Leonardo0013YT\UltraCTW\managers\WinDancesManager.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectDareDevil.class
@@ -25,6 +28,7 @@ io\github\Leonardo0013YT\UltraCTW\cosmetics\kits\KitLevel.class
 io\github\Leonardo0013YT\UltraCTW\listeners\SetupListener$3.class
 io\github\Leonardo0013YT\UltraCTW\scoreboard\bukkit\util\NMS.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectChicken$1.class
+io\github\Leonardo0013YT\UltraCTW\kiteditor\KitEditorEvents.class
 io\github\Leonardo0013YT\UltraCTW\menus\SetupMenu.class
 io\github\Leonardo0013YT\UltraCTW\setup\KitLevelSetup.class
 io\github\Leonardo0013YT\UltraCTW\managers\KillEffectsManager.class
@@ -42,6 +46,7 @@ io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectCrazyBlocks.clas
 io\github\Leonardo0013YT\UltraCTW\objects\Level.class
 io\github\Leonardo0013YT\UltraCTW\inventories\LobbyShopMenu.class
 io\github\Leonardo0013YT\UltraCTW\objects\ObjectPotion.class
+io\github\Leonardo0013YT\UltraCTW\listeners\PlayerEvents.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\windances\WinDanceIceWalker.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\windances\WinDanceThunder$1.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectWitherRider.class
@@ -51,6 +56,7 @@ io\github\Leonardo0013YT\UltraCTW\cosmetics\killeffects\KillEffectDiamondExplode
 io\github\Leonardo0013YT\UltraCTW\utils\ItemBuilder.class
 io\github\Leonardo0013YT\UltraCTW\listeners\SetupListener$2.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\windances\WinDanceFireworks$1.class
+io\github\Leonardo0013YT\UltraCTW\cmds\GlobalToggleCMD.class
 io\github\Leonardo0013YT\UltraCTW\UltraCTW$2.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\windances\WinDanceDestroyIsland$1.class
 io\github\Leonardo0013YT\UltraCTW\game\GameNoState$1.class
@@ -90,6 +96,7 @@ io\github\Leonardo0013YT\UltraCTW\cosmetics\killeffects\KillEffectSnowExplosion.
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectStorm$1.class
 io\github\Leonardo0013YT\UltraCTW\xseries\XMaterial.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectFireworks.class
+io\github\Leonardo0013YT\UltraCTW\kiteditor\EditorManager.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectVulcanFire.class
 io\github\Leonardo0013YT\UltraCTW\listeners\SetupListener$5.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectStorm.class
@@ -131,6 +138,7 @@ io\github\Leonardo0013YT\UltraCTW\cmds\CTWCMD.class
 io\github\Leonardo0013YT\UltraCTW\api\CTWAPI.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\windances\WinDanceDayNight$1.class
 io\github\Leonardo0013YT\UltraCTW\managers\TrailsManager$1.class
+io\github\Leonardo0013YT\UltraCTW\cmds\kits\SaveKit.class
 io\github\Leonardo0013YT\UltraCTW\api\events\CTWNPCInteractEvent.class
 io\github\Leonardo0013YT\UltraCTW\managers\ConfigManager.class
 io\github\Leonardo0013YT\UltraCTW\utils\CenterMessage.class
@@ -213,6 +221,7 @@ io\github\Leonardo0013YT\UltraCTW\listeners\PlayerListener$2.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectGuardians$1.class
 io\github\Leonardo0013YT\UltraCTW\addons\NametagEditAddon.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\killeffects\KillEffectSquid$1.class
+io\github\Leonardo0013YT\UltraCTW\customevents\CTWPlayerJoinGameEvent.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectVulcanWool$1.class
 io\github\Leonardo0013YT\UltraCTW\managers\WinEffectsManager.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\windances\WinDanceAnvilLand$1.class

@@ -31,6 +31,10 @@ public class Utils {
     private final static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private final static Random random = new Random();
     private static final UltraCTW plugin = UltraCTW.get();
+
+    public static String getColor(String var1) {
+        return ChatColor.translateAlternateColorCodes('&', var1);
+    }
     private static final ItemStack[] gifs = {NBTEditor.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmNlZjlhYTE0ZTg4NDc3M2VhYzEzNGE0ZWU4OTcyMDYzZjQ2NmRlNjc4MzYzY2Y3YjFhMjFhODViNyJ9fX0="),
             NBTEditor.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI2NzMwZGU3ZTViOTQxZWZjNmU4Y2JhZjU3NTVmOTQyMWEyMGRlODcxNzU5NjgyY2Q4ODhjYzRhODEyODIifX19"),
             NBTEditor.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDA4Y2U3ZGViYTU2YjcyNmE4MzJiNjExMTVjYTE2MzM2MTM1OWMzMDQzNGY3ZDVlM2MzZmFhNmZlNDA1MiJ9fX0="),
@@ -102,12 +106,73 @@ public class Utils {
             if (isCaptured) {
                 wools.append(c).append(plugin.getLang().get("scoreboards.wools.captured")).append(" ");
             } else if (inInProgress) {
-                wools.append(c).append(plugin.getLang().get("scoreboards.wools.inProcess")).append(" ");
+                wools.append(c).append(plugin.getLang().get("scoreboards.wools.inProcess").replace("%distance%", checkNearbyPlayer(team, c))).append(" ");
             } else {
                 wools.append(c).append(plugin.getLang().get("scoreboards.wools.noCaptured")).append(" ");
             }
         }
         return wools.toString();
+    }
+
+    public static String getWoolString(Team team, ChatColor color) {
+        if (team == null) return "";
+        StringBuilder wool = new StringBuilder();
+        boolean inInProgress = team.isInProgress(color);
+        boolean isCaptured = team.isCaptured(color);
+        if (isCaptured) {
+            wool.append(color).append(plugin.getLang().get("scoreboards.wools.captured")).append(" ");
+        } else if (inInProgress) {
+            wool.append(color).append(plugin.getLang().get("scoreboards.wools.inProcess").replace("%distance%", checkNearbyPlayer(team, color))).append(" ");
+        } else {
+            wool.append(color).append(plugin.getLang().get("scoreboards.wools.noCaptured")).append(" ");
+        }
+        return wool.toString();
+    }
+
+    public static String getCapturedString(Player player, Team team) {
+        StringBuilder wool = new StringBuilder();
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item == null || item.getType().equals(Material.AIR)) { continue; }
+            if (!item.getType().equals(Material.WOOL)) { continue; }
+            ChatColor c = ChatColor.valueOf(NBTEditor.getString(item, "TEAM", "WOOL", "CAPTURE"));
+            if (team.getCaptured().contains(c)) { continue; }
+            if (team.getColors().contains(c)) {
+                wool.append(c).append("░").append(" ");
+            }
+        }
+        return wool.toString();
+    }
+
+    public static String checkNearbyPlayer(Team team, ChatColor color) {
+        List<Integer> distances = new ArrayList<>();
+        for (Player member : team.getMembers()) {
+
+            for (ItemStack item : member.getInventory().getContents()) {
+                if (item == null || item.getType().equals(Material.AIR)) { continue; }
+                if (!item.getType().equals(Material.WOOL)) { continue; }
+                String varColor = NBTEditor.getString(item, "TEAM", "WOOL", "CAPTURE");
+                if (varColor == null) { continue; }
+                ChatColor c = ChatColor.valueOf(varColor);
+                if (c.equals(color)) {
+                    Location varLoc = team.getWoolsLoc().get(c);
+                    distances.add(calculateDistance(member.getLocation(), varLoc));
+                    Collections.sort(distances);
+                }
+            }
+        }
+        if (distances.isEmpty()) {
+            return "0m";
+        }
+        return distances.get(0) + "m";
+    }
+
+    public static int calculateDistance(Location loc1, Location loc2) {
+        double distanciaX = loc2.getX() - loc1.getX();
+        double distanciaY = loc2.getY() - loc1.getY();
+        double distanciaZ = loc2.getZ() - loc1.getZ();
+
+        double distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY + distanciaZ * distanciaZ);
+        return (int) distancia;
     }
 
     public static String getWoolsTag(Team team){

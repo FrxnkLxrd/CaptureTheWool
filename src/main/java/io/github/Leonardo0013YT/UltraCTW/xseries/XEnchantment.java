@@ -102,7 +102,7 @@ public enum XEnchantment {
      * If an enchantment has {@code self} as true, it means that
      * the vanilla enchantment name matches the Bukkit name.
      *
-     * @see NamespacedKey#getKey()
+     //* @see NamespacedKey#getKey()
      */
     private final boolean self;
     private final String[] aliases;
