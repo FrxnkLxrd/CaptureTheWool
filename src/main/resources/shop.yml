@@ -1,0 +1,61 @@
+shop:
+  '0':
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      type: TNT
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §5TNT
+        lore:
+        - §7Es perfecto para hacer
+        - §7TNT Jump.
+    price: 20.0
+  '1':
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      type: WEB
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §5Telarañas
+        lore:
+        - §7Usalo si quieres que los demas
+        - §7jugadores te odien.
+    price: 30.0
+  '2':
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLDEN_APPLE
+      amount: 2
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §5Manzanas
+        lore:
+        - §7Perfecto para re-generar vida.
+    price: 15.0
+  '3':
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      type: ARROW
+      amount: 8
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §5Flechas
+        lore:
+        - §7¿Eres un camper?
+    price: 15.0
+  '4':
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      type: SLIME_BLOCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §5Bloque de Slime
+        lore:
+        - §7Slime Drop.
+    price: 30.0
