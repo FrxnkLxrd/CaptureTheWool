@@ -15,10 +15,8 @@ commands:
     aliases: [ salir ]
   join:
     aliases: [ jugar ]
-  shout:
-    aliases: [ global, g, grito]
   kiteditor:
   savekit:
   resetkit:
   globaltoggle:
-    aliases: [ gl ]
+    aliases: [ gl, g ]

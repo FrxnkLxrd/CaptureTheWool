@@ -14,7 +14,7 @@ public class PlayerEvents implements Listener {
         p.setGameMode(GameMode.ADVENTURE);
         p.getInventory().setArmorContents(null);
         p.getInventory().clear();
-        p.teleport(p.getLocation().add(0, 20, 0));
+        //p.teleport(p.getLocation().add(0, 20, 0));
         p.setAllowFlight(true);
         p.setFlying(true);
         p.setHealth(p.getMaxHealth());
