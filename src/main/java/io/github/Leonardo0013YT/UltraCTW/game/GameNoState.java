@@ -4,6 +4,7 @@ import com.nametagedit.plugin.NametagEdit;
 import de.Herbystar.TTA.BossBar.NMS_BossBar;
 import de.Herbystar.TTA.TTA_Methods;
 import io.github.Leonardo0013YT.UltraCTW.UltraCTW;
+import io.github.Leonardo0013YT.UltraCTW.customevents.CTWGameWinEvent;
 import io.github.Leonardo0013YT.UltraCTW.customevents.CTWPlayerJoinGameEvent;
 import io.github.Leonardo0013YT.UltraCTW.enums.NPCType;
 import io.github.Leonardo0013YT.UltraCTW.enums.State;
@@ -368,6 +369,9 @@ public class GameNoState implements Game {
         setState(State.FINISH);
         GameWin gw = new GameWin(this);
         gw.setTeamWin(team);
+        CTWGameWinEvent event = new CTWGameWinEvent(this, gw, team);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) { return; }
         List<String> top = gw.getTop();
         String[] s1 = top.get(0).split(":");
         String[] s2 = top.get(1).split(":");

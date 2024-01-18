@@ -151,6 +151,7 @@ io\github\Leonardo0013YT\UltraCTW\objects\Selection.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectVulcanWool.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\wineffects\WinEffectGhosts.class
 io\github\Leonardo0013YT\UltraCTW\utils\ItemUtils.class
+io\github\Leonardo0013YT\UltraCTW\customevents\CTWGameWinEvent.class
 io\github\Leonardo0013YT\UltraCTW\listeners\MenuListener.class
 io\github\Leonardo0013YT\UltraCTW\interfaces\Injection.class
 io\github\Leonardo0013YT\UltraCTW\cosmetics\killeffects\KillEffectFlowerPower$1.class

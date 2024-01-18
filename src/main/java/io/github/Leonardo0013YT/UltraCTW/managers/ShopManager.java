@@ -15,6 +15,7 @@ import io.github.Leonardo0013YT.UltraCTW.interfaces.Game;
 import io.github.Leonardo0013YT.UltraCTW.interfaces.Purchasable;
 import io.github.Leonardo0013YT.UltraCTW.objects.ShopItem;
 import io.github.Leonardo0013YT.UltraCTW.team.Team;
+import io.github.Leonardo0013YT.UltraCTW.utils.ItemUtils;
 import io.github.Leonardo0013YT.UltraCTW.utils.Utils;
 import io.github.Leonardo0013YT.UltraCTW.xseries.XSound;
 import org.bukkit.ChatColor;
@@ -23,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class ShopManager {
@@ -68,7 +70,11 @@ public class ShopManager {
                 return;
             }
             ShopItem si = (ShopItem) purchasable;
-            p.getInventory().addItem(si.getItem());
+            ItemStack item = si.getItem();
+            ItemMeta meta = item.getItemMeta();
+            meta.setLore(Collections.emptyList());
+            item.setItemMeta(meta);
+            p.getInventory().addItem(item);
             gp.setCoins(gp.getCoins() - si.getPrice());
             p.sendMessage(plugin.getLang().get(p, "messages.received").replace("<name>", ChatColor.stripColor(si.getItem().getItemMeta().getDisplayName())));
             p.playSound(p.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.parseSound(),2.0F, 2.0F);
