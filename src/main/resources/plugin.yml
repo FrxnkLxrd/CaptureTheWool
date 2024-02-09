@@ -2,7 +2,7 @@ name: UltraCaptureTheWool
 main: io.github.Leonardo0013YT.UltraCTW.UltraCTW
 version: 3.0
 author: Leonardo0013YT
-description: UltraCTW edited by MGDCl
+description: UltraCTW edited by FrxnkLxrd
 softdepend: [ PlaceholderAPI ]
 depend: [ ProtocolLib, WorldEdit, FastAsyncWorldEdit ]
 commands:
@@ -10,7 +10,6 @@ commands:
   ctws:
     aliases: [ ctwadmin ]
   ctw:
-    aliases: [ dcl ]
   leave:
     aliases: [ salir ]
   join:

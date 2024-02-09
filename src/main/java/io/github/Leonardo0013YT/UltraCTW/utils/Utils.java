@@ -137,7 +137,7 @@ public class Utils {
             ChatColor c = ChatColor.valueOf(NBTEditor.getString(item, "TEAM", "WOOL", "CAPTURE"));
             if (team.getCaptured().contains(c)) { continue; }
             if (team.getColors().contains(c)) {
-                wool.append(c).append(plugin.getLang().get("scoreboards.wools.captured")).append(" ");
+                wool.append(c).append("░").append(" ");
             }
         }
         return wool.toString();

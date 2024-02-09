@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 
 public class SaveKit implements CommandExecutor {
 
@@ -24,7 +25,9 @@ public class SaveKit implements CommandExecutor {
             EditorManager.getInstance().saveKit(player);
             player.getInventory().clear();
             player.teleport(UltraCTW.get().getCm().getMainLobby());
-            player.getActivePotionEffects().clear();
+            for (PotionEffect activePotionEffect : player.getActivePotionEffects()) {
+                player.removePotionEffect(activePotionEffect.getType());
+            }
             EditorManager.getInstance().addOrRemovePlayer(player, true);
             return false;
         }

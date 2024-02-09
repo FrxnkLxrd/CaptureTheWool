@@ -100,12 +100,12 @@ public class GameNoState implements Game {
     public void addPlayer(Player p) {
         Game game = this;
         p.teleport(lobby);
+        Utils.setCleanPlayer(p);
         CTWPlayerJoinGameEvent event = new CTWPlayerJoinGameEvent(p, game);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) { return; }
-        cached.forEach(o -> o.hidePlayer(p));
+        //cached.forEach(o -> o.hidePlayer(p));
         gamePlayer.put(p, new GamePlayer(p));
-        Utils.setCleanPlayer(p);
         inLobby.add(p);
         cached.add(p);
         players.add(p);
@@ -123,19 +123,6 @@ public class GameNoState implements Game {
         checkStart();
         sendTabNoGame(p);
         morePlayers();
-
-        /*for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-            if (spectator == null) { break; }
-            if (!otherPlayer.getWorld().getName().equals(spectator.getWorld().getName())) {
-                p.hidePlayer(otherPlayer);
-            }
-        }
-        for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-            if (spectator == null) { break; }
-            if (!spectator.getWorld().getName().equals(otherPlayer.getWorld().getName())) {
-                otherPlayer.hidePlayer(p);
-            }
-        }*/
     }
 
     @Override
@@ -244,7 +231,7 @@ public class GameNoState implements Game {
         p.setAllowFlight(true);
         p.setFlying(true);
         p.setHealth(p.getMaxHealth());
-        p.setNoDamageTicks(Integer.MAX_VALUE);
+        //p.setNoDamageTicks(Integer.MAX_VALUE);
         players.remove(p);
         spectators.add(p);
     }
