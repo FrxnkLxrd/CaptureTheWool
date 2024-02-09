@@ -43,13 +43,11 @@ public class KitEditorEvents implements Listener {
     public void onBreak(BlockBreakEvent event) {
         if (!EditorManager.getInstance().playerIsEdit(event.getPlayer())) { return; }
         event.setCancelled(true);
-
     }
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
         if (!EditorManager.getInstance().playerIsEdit(event.getPlayer())) { return; }
         event.setCancelled(true);
-
     }
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
